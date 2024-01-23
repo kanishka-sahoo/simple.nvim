@@ -5,7 +5,7 @@ return {
 	},
 	{
 		"L3MON4D3/LuaSnip",
-        event = "VeryLazy",
+        event = "UIEnter",
 		dependencies = {
 			"saadparwaiz1/cmp_luasnip",
 			"rafamadriz/friendly-snippets",
