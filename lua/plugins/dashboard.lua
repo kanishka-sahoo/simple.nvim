@@ -1,38 +1,59 @@
 return {
-    'nvimdev/dashboard-nvim',
-    event = 'VimEnter',
-    config = function()
-        require('dashboard').setup {
-            theme = 'hyper',
-            config = {
-                week_header = {
-                    enable = true,
+	"nvimdev/dashboard-nvim",
+	event = "VimEnter",
+	opts = function()
+		local logo = [[
+███████╗██╗███╗   ███╗██████╗ ██╗     ███████╗   ███╗   ██╗██╗   ██╗██╗███╗   ███╗
+██╔════╝██║████╗ ████║██╔══██╗██║     ██╔════╝   ████╗  ██║██║   ██║██║████╗ ████║
+███████╗██║██╔████╔██║██████╔╝██║     █████╗     ██╔██╗ ██║██║   ██║██║██╔████╔██║
+╚════██║██║██║╚██╔╝██║██╔═══╝ ██║     ██╔══╝     ██║╚██╗██║╚██╗ ██╔╝██║██║╚██╔╝██║
+███████║██║██║ ╚═╝ ██║██║     ███████╗███████╗██╗██║ ╚████║ ╚████╔╝ ██║██║ ╚═╝ ██║
+╚══════╝╚═╝╚═╝     ╚═╝╚═╝     ╚══════╝╚══════╝╚═╝╚═╝  ╚═══╝  ╚═══╝  ╚═╝╚═╝     ╚═╝
+        ]]
+        logo = string.rep("\n", 8) .. logo .. "\n\n"
+
+		local opts = {
+			theme = "doom",
+			hide = {
+				-- this is taken care of by lualine
+				-- enabling this messes up the actual laststatus setting after loading a file
+				statusline = false,
+			},
+			config = {
+				header = vim.split(logo, "\n"),
+                -- stylua: ignore
+                center = {
+                    { action = "Telescope find_files", desc = " Find file", icon = " ", key = "ff" },
+                    { action = "Telescope oldfiles", desc = " Recent files", icon = " ", key = "fh" },
+                    { action = "Telescope live_grep", desc = " Find text", icon = " ", key = "fg" },
+                    { action = "Telescope colorscheme", desc = " Colorscheme", icon = " ", key = "fc" },
+                    { action = "Lazy", desc = " Lazy", icon = "󰒲 ", key = "l" },
+                    { action = "qa", desc = " Quit", icon = " ", key = "q" },
                 },
-                shortcut = {
-                    { desc = '󰊳 Update', group = '@property', action = 'Lazy update', key = 'u' },
-                    {
-                        icon = ' ',
-                        icon_hl = '@variable',
-                        desc = 'Files',
-                        group = 'Label',
-                        action = 'Telescope find_files',
-                        key = 'f',
-                    },
-                    {
-                        desc = ' Apps',
-                        group = 'DiagnosticHint',
-                        action = 'Telescope app',
-                        key = 'a',
-                    },
-                    {
-                        desc = ' dotfiles',
-                        group = 'Number',
-                        action = 'Telescope dotfiles',
-                        key = 'd',
-                    },
-                },
-            },
-        }
-    end,
-    dependencies = { { 'nvim-tree/nvim-web-devicons' } }
+				footer = function()
+					local stats = require("lazy").stats()
+					local ms = (math.floor(stats.startuptime * 100 + 0.5) / 100)
+					return { "⚡ Neovim loaded " .. stats.loaded .. "/" .. stats.count .. " plugins in " .. ms .. "ms" }
+				end,
+			},
+		}
+
+		for _, button in ipairs(opts.config.center) do
+			button.desc = button.desc .. string.rep(" ", 43 - #button.desc)
+			button.key_format = "  %s"
+		end
+
+		-- close Lazy and re-open when the dashboard is ready
+		if vim.o.filetype == "lazy" then
+			vim.cmd.close()
+			vim.api.nvim_create_autocmd("User", {
+				pattern = "DashboardLoaded",
+				callback = function()
+					require("lazy").show()
+				end,
+			})
+		end
+
+		return opts
+	end,
 }

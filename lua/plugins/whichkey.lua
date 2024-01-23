@@ -16,6 +16,7 @@ return {
 				g = "Live Grep",
 				h = "Old Files",
 				c = "Colorscheme",
+                i = "Git Search"
 			},
 			n = {
 				name = "Neo-tree",
@@ -45,6 +46,7 @@ return {
 				q = "Diagnostics set local list",
 				r = "Rename file",
 				f = "Format",
+                u = "Undo tree"
 			},
 			w = {
 				name = "Workspace",
