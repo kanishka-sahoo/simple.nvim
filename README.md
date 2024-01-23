@@ -2,7 +2,7 @@
 A simple neovim configuration for all the essentials
 
 # Installation
-`git clone --depth 1 https://kanishka-sahoo/simple.nvim.git ~/.config/nvim && nvim`
+`git clone --depth 1 https://github.com/kanishka-sahoo/simple.nvim.git ~/.config/nvim && nvim`
 
 # Configuration
 The plugins are defined in the path `lua/plugins/[plugin].lua`. However, there are exceptions.
